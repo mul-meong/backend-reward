@@ -22,12 +22,20 @@ public enum BaseResponseStatus {
     NO_SIGN_IN(HttpStatus.UNAUTHORIZED, false, 402, "로그인을 먼저 진행해주세요"),
 
     // 900 : 기타 에러
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, 900, "요청 처리 중 에러가 발생하였습니다.");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, false, 900, "요청 처리 중 에러가 발생하였습니다."),
 
+    // 1700 : 뱃지 관련 에러
+    NO_BADGE(HttpStatus.BAD_REQUEST, false, 1700, "존재하지 않는 뱃지입니다."),
+    EXIST_BADGE(HttpStatus.BAD_REQUEST, false, 1701, "이미 존재하는 뱃지입니다.");
+
+    // 1800 : 포인트 관련 에러
+
+    // 1900 : 등급 관련 에러
 
     private final HttpStatusCode httpStatusCode;
     private final boolean isSuccess;
     private final int code;
     private final String message;
+
 }
 
