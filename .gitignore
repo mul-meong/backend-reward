@@ -40,3 +40,6 @@ out/
 /node_modules/
 package-lock.json
 .DS_Store
+
+### Secret ###
+src/main/resources/
