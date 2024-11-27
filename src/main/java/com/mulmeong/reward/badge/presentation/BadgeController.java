@@ -1,7 +1,7 @@
 package com.mulmeong.reward.badge.presentation;
 
 import com.mulmeong.reward.badge.application.BadgeService;
-import com.mulmeong.reward.badge.dto.BadgeDto;
+import com.mulmeong.reward.badge.dto.out.BadgeDto;
 import com.mulmeong.reward.common.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

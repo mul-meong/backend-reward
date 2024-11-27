@@ -1,4 +1,4 @@
-package com.mulmeong.reward.badge.dto;
+package com.mulmeong.reward.badge.dto.out;
 
 import com.mulmeong.reward.badge.domain.Badge;
 import lombok.AllArgsConstructor;
@@ -23,6 +23,4 @@ public class BadgeDto {
                 .description(badge.getDescription())
                 .build();
     }
-
-
 }
