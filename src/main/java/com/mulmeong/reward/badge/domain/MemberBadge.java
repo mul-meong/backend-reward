@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"memberUuid", "badgeId"})})
 @NoArgsConstructor
 @Getter
 @Entity
@@ -21,18 +23,19 @@ public class MemberBadge {
 
     @Comment("뱃지 ID")
     @Column(nullable = false)
-    private Integer badgeId;
+    private Long badgeId;
 
     @Comment("착용 여부")
+    @ColumnDefault("false")
     @Column(nullable = false)
-    private boolean isEquipped;
+    private Boolean equipped;
 
     @Builder
-    public MemberBadge(Long id, String memberUuid, Integer badgeId, boolean isEquipped) {
+    public MemberBadge(Long id, String memberUuid, Long badgeId, Boolean equipped) {
         this.id = id;
         this.memberUuid = memberUuid;
         this.badgeId = badgeId;
-        this.isEquipped = isEquipped;
+        this.equipped = equipped;
     }
 }
 
