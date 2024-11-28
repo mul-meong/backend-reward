@@ -1,6 +1,5 @@
 package com.mulmeong.reward.point.application;
 
-import com.mulmeong.event.member.MemberCreateEvent;
 import com.mulmeong.reward.common.exception.BaseException;
 import com.mulmeong.reward.point.dto.out.MemberPointDto;
 import com.mulmeong.reward.point.infrastructure.MemberPointRepository;
@@ -11,7 +10,7 @@ import static com.mulmeong.reward.common.response.BaseResponseStatus.NO_POINT;
 
 @RequiredArgsConstructor
 @Service
-public class MemberPointServiceImpl implements MemberPointService {
+public class MemberPointHttpServiceImpl implements MemberPointHttpService {
 
     private final MemberPointRepository memberPointRepository;
 
@@ -20,10 +19,5 @@ public class MemberPointServiceImpl implements MemberPointService {
 
         return MemberPointDto.from(memberPointRepository.findByMemberUuid(memberUuid)
                 .orElseThrow(() -> new BaseException(NO_POINT)));
-    }
-
-    @Override
-    public void createMemberPointDocument(MemberCreateEvent event) {
-        memberPointRepository.save(event.toEntity());
     }
 }

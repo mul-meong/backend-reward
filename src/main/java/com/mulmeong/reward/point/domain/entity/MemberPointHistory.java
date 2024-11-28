@@ -1,4 +1,4 @@
-package com.mulmeong.reward.point.domain.document;
+package com.mulmeong.reward.point.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
