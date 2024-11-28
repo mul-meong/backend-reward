@@ -34,5 +34,4 @@ public class GradeController {
     public BaseResponse<List<GradeDto>> getAllGrades() {
         return new BaseResponse<>(gradeService.getAllGrades());
     }
-
 }
