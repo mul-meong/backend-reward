@@ -29,6 +29,8 @@ public enum BaseResponseStatus {
     EXIST_BADGE(HttpStatus.BAD_REQUEST, false, 1701, "이미 존재하는 뱃지입니다."),
 
     // 1800 : 포인트 관련 에러
+    NO_POINT(HttpStatus.BAD_REQUEST, false, 1800, "존재하지 않는 포인트입니다."),
+
 
     // 1900 : 등급 관련 에러
     NO_GRADE(HttpStatus.BAD_REQUEST, false, 1900, "존재하지 않는 등급입니다."),
