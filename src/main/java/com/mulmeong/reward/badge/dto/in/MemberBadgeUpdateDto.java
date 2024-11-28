@@ -27,7 +27,7 @@ public class MemberBadgeUpdateDto {
         return MemberBadge.builder()
                 .id(memberBadge.getId())
                 .memberUuid(memberBadge.getMemberUuid())
-                .badgeId(memberBadge.getBadgeId())
+                .badge(memberBadge.getBadge())
                 .equipped(equipped)
                 .build();
     }

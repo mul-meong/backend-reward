@@ -1,5 +1,6 @@
 package com.mulmeong.reward.badge.dto.in;
 
+import com.mulmeong.reward.badge.domain.Badge;
 import com.mulmeong.reward.badge.domain.MemberBadge;
 import com.mulmeong.reward.badge.vo.in.BadgeCreateVo;
 import com.mulmeong.reward.badge.vo.in.MemberBadgeCreateVo;
@@ -25,7 +26,7 @@ public class MemberBadgeCreateDto {
     public MemberBadge toEntity() {
         return MemberBadge.builder()
                 .memberUuid(memberUuid)
-                .badgeId(badgeId)
+                .badge(Badge.builder().id(badgeId).build())
                 .equipped(false)
                 .build();
     }

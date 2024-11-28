@@ -1,5 +1,6 @@
 package com.mulmeong.reward.badge.dto.out;
 
+import com.mulmeong.reward.badge.domain.Badge;
 import com.mulmeong.reward.badge.domain.MemberBadge;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,7 @@ public class MemberBadgeDto {
 
     public static MemberBadgeDto fromEntity(MemberBadge memberBadge) {
         return MemberBadgeDto.builder()
-                .badgeId(memberBadge.getBadgeId())
+                .badgeId(memberBadge.getBadge().getId())
                 .equipped(memberBadge.getEquipped())
                 .build();
     }

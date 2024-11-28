@@ -22,19 +22,20 @@ public class MemberBadge {
     private String memberUuid;
 
     @Comment("뱃지 ID")
-    @Column(nullable = false)
-    private Long badgeId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "badge_id")
+    private Badge badge;
 
     @Comment("착용 여부")
-    @ColumnDefault("false")
     @Column(nullable = false)
+    @ColumnDefault("false")
     private Boolean equipped;
 
     @Builder
-    public MemberBadge(Long id, String memberUuid, Long badgeId, Boolean equipped) {
+    public MemberBadge(Long id, String memberUuid, Badge badge, Boolean equipped) {
         this.id = id;
         this.memberUuid = memberUuid;
-        this.badgeId = badgeId;
+        this.badge = badge;
         this.equipped = equipped;
     }
 }
