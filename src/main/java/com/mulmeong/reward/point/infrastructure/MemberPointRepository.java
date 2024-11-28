@@ -1,6 +1,6 @@
 package com.mulmeong.reward.point.infrastructure;
 
-import com.mulmeong.reward.point.document.MemberPoint;
+import com.mulmeong.reward.point.domain.document.MemberPoint;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

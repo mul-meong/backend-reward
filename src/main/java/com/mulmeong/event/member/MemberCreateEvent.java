@@ -1,6 +1,6 @@
 package com.mulmeong.event.member;
 
-import com.mulmeong.reward.point.document.MemberPoint;
+import com.mulmeong.reward.point.domain.document.MemberPoint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
