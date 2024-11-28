@@ -26,11 +26,13 @@ public enum BaseResponseStatus {
 
     // 1700 : 뱃지 관련 에러
     NO_BADGE(HttpStatus.BAD_REQUEST, false, 1700, "존재하지 않는 뱃지입니다."),
-    EXIST_BADGE(HttpStatus.BAD_REQUEST, false, 1701, "이미 존재하는 뱃지입니다.");
+    EXIST_BADGE(HttpStatus.BAD_REQUEST, false, 1701, "이미 존재하는 뱃지입니다."),
 
     // 1800 : 포인트 관련 에러
 
     // 1900 : 등급 관련 에러
+    NO_GRADE(HttpStatus.BAD_REQUEST, false, 1900, "존재하지 않는 등급입니다."),
+    EXIST_GRADE(HttpStatus.BAD_REQUEST, false, 1901, "이미 존재하는 등급입니다.");
 
     private final HttpStatusCode httpStatusCode;
     private final boolean isSuccess;
