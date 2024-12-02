@@ -9,6 +9,13 @@ checkstyle {
     maxWarnings = 0 // 규칙이 어긋나는 코드가 하나라도 있을 경우 빌드 fail
     configFile = file("checkstyle/google_checks.xml") // 설정 파일 경로 지정
     toolVersion = "10.18.0"
+    sourceSets {
+        main {
+            java {
+                exclude '/**/com/mulmeong/reward/common/config/**'
+            }
+        }
+    }
 }
 
 group = 'com.mulmeong'

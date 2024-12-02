@@ -1,6 +1,11 @@
 package com.mulmeong.reward.common.config;
 
+import com.mulmeong.event.comment.FeedCommentCreateEvent;
+import com.mulmeong.event.comment.FeedRecommentCreateEvent;
+import com.mulmeong.event.comment.ShortsCommentCreateEvent;
+import com.mulmeong.event.comment.ShortsRecommentCreateEvent;
 import com.mulmeong.event.member.MemberCreateEvent;
+import com.mulmeong.reward.common.exception.BaseException;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +16,10 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.Map;
 
@@ -40,9 +47,32 @@ public class KafkaConsumerConfig {
         return kafkaListenerContainerFactory(MemberCreateEvent.class);
     }
 
+    /* 피드 댓글 생성 후 이벤트 리스너 */
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, FeedCommentCreateEvent> feedCommentCreateEventListener() {
+        return kafkaListenerContainerFactory(FeedCommentCreateEvent.class);
+    }
+
+    /* 피드 대댓글 생성 후 이벤트 리스너 */
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, FeedRecommentCreateEvent> feedRecommentCreateEventListener() {
+        return kafkaListenerContainerFactory(FeedRecommentCreateEvent.class);
+    }
+
+    /* 쇼츠 댓글 생성 후 이벤트 리스너 */
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, ShortsCommentCreateEvent> shortsCommentCreateEventListener() {
+        return kafkaListenerContainerFactory(ShortsCommentCreateEvent.class);
+    }
+
+    /* 쇼츠 대댓글 생성 후 이벤트 리스너 */
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, ShortsRecommentCreateEvent> shortsRecommentCreateEventListener() {
+        return kafkaListenerContainerFactory(ShortsRecommentCreateEvent.class);
+    }
 
     // =================================================================
-    // 아래는 공통 설정입니다.
+    // 아래는 기본 설정입니다.
     // =================================================================
 
     /**
@@ -60,7 +90,7 @@ public class KafkaConsumerConfig {
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class,
                 ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class.getName(),
                 ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName(),
-                JsonDeserializer.TRUSTED_PACKAGES, "com.mulmeong.event.member",
+                JsonDeserializer.TRUSTED_PACKAGES, "com.mulmeong.event.*",
                 JsonDeserializer.VALUE_DEFAULT_TYPE, messageType
         ));
     }
@@ -79,5 +109,13 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(consumerFactory(messageType));
         factory.getContainerProperties().setGroupId(groupId);
         return factory;
+    }
+
+    @Bean
+    public DefaultErrorHandler errorHandler() {
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler(
+                new FixedBackOff(1000L, 2)); // 1초 대기, 최대 2번 재시도
+        errorHandler.addNotRetryableExceptions(BaseException.class);
+        return errorHandler;
     }
 }
