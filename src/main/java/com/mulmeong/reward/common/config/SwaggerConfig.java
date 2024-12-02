@@ -1,4 +1,4 @@
-package com.mulmeong.test.common.config;
+package com.mulmeong.reward.common.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -12,10 +12,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
-        info = @Info(title = "ㅇㅇ 도메인 API", version = "v1",
-                description = " {ㅇㅇ 도메인의 기능 나열} 서비스",
+        info = @Info(title = "리워드 서비스", version = "v1",
+                description = " 포인트, 등급, 뱃지 관련 서비스",
                 termsOfService = "http://swagger.io/terms/")
-
 )
 @Configuration
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class SwaggerConfig {
                 .addSecurityItem(securityRequirement)
                 .components(components)
                 // Swagger에서 요청보낼때 API에 추가되는 문자열
-                .addServersItem(new Server().url("/ㅇㅇ-service"));
+                .addServersItem(new Server().url("/reward-service"));
         //.addServersItem(new Server().url("/"));
     }
 
