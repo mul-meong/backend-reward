@@ -5,12 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class MemberPointHistory {
 
     @Id
@@ -22,24 +25,27 @@ public class MemberPointHistory {
     private String memberUuid;
 
     @Comment("포인트 변경 이유")
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
-    private String reason; // feed_create, comment_create, contest_win, etc
+    private HistoryReason reason; // feed_create, comment_create, contest_win, etc
 
     @Comment("포인트 변경 타입")
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
-    private String historyType; // increase, decrease
+    private HistoryType historyType; // increase, decrease
 
     @Comment("변경된 포인트")
     @Column(nullable = false)
     private Integer point;
 
     @Comment("포인트 변경 일자")
-    @Column(nullable = false)
-    private LocalDate createdAt;
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     @Builder
-    public MemberPointHistory(Long id, String memberUuid, String reason,
-                              String historyType, Integer point, LocalDate createdAt) {
+    public MemberPointHistory(Long id, String memberUuid, HistoryReason reason,
+                              HistoryType historyType, Integer point, LocalDateTime createdAt) {
         this.id = id;
         this.memberUuid = memberUuid;
         this.reason = reason;
