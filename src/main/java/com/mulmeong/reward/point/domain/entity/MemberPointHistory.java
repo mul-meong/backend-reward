@@ -15,7 +15,7 @@ public class MemberPointHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     @Comment("회원 UUID")
     @Column(nullable = false, length = 36)
@@ -38,7 +38,7 @@ public class MemberPointHistory {
     private LocalDate createdAt;
 
     @Builder
-    public MemberPointHistory(String id, String memberUuid, String reason,
+    public MemberPointHistory(Long id, String memberUuid, String reason,
                               String historyType, Integer point, LocalDate createdAt) {
         this.id = id;
         this.memberUuid = memberUuid;
