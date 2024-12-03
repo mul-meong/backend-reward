@@ -35,7 +35,7 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServer;
 
-    @Value("${spring.kafka.consumer.group-id}")
+    @Value("${event.reward.sub.group-id}")
     private String groupId;
 
 
