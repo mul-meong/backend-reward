@@ -20,9 +20,23 @@ public class MemberPointHistoryAspect {
 
     private final MemberPointHistoryRepository historyRepository;
 
-    @AfterReturning(pointcut = "@annotation(com.mulmeong.reward.point.aop.annotation.LogPointHistory)")
+    /**
+     * LogPointHistory 어노테이션을 단 메서드가 true를 반환할 경우 포인트 히스토리 저장하는 어드바이스.
+     *
+     * @param joinPoint 조인 포인트
+     * @param isPointUpdated 메서드 실행 결과(포인트 증가 성공 여부)
+     */
+    @AfterReturning(
+            pointcut = "@annotation(com.mulmeong.reward.point.aop.annotation.LogPointHistory)",
+            returning = "isPointUpdated")
     @Transactional
-    public void logPointHistory(JoinPoint joinPoint) {
+    public void logPointHistory(JoinPoint joinPoint, Object isPointUpdated) {
+
+        // 포인트 증가 실패시 히스토리 저장하지 않음
+        if (isPointUpdated instanceof Boolean && !(Boolean) isPointUpdated) {
+            return;
+        }
+
         Object[] args = joinPoint.getArgs();
         String memberUuid = (String) args[0];
         EventType eventType = (EventType) args[1];
@@ -39,6 +53,5 @@ public class MemberPointHistoryAspect {
                 .build();
 
         historyRepository.save(history);
-        log.info("포인트 히스토리 저장 완료: {}", history);
     }
 }

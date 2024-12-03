@@ -44,22 +44,25 @@ public class MemberPointEventServiceImpl implements MemberPointEventService {
      * 포인트 증가 이벤트 처리
      * 1. Redis 에서 금일 횟수 조회
      * 2. 각 이벤트의 최대 횟수 초과 여부 확인 => 초과시 return;
-     * 3. (미초과시) 횟수 증가 및 TTL 설정해 Redis 에 횟수 저장.
-     * 4. 포인트 업데이트 및 어노테이션을 통한 히스토리 저장
+     * 3. (미초과시) 횟수 증가 및 TTL 설정해 Redis 에 횟수 저장
+     * 4. 포인트 업데이트 및 히스토리 저장(AOP).
      *
-     * @param memberUuid 회원 uuid
+     * @param memberUuid 포인트 조정 대상인 회원 uuid
+     * @param eventType redis key prefix, 포인트, 최대 횟수, 사유 등을 미리 정의한 enum
+     * @return 성공 여부 => T: 히스토리 저장, F: 히스토리 저장 X
      */
     @Override
     @LogPointHistory
-    public void addPointByEvent(String memberUuid, EventType eventType) {
+    public boolean addPointByEvent(String memberUuid, EventType eventType) {
         String todayKey = eventType.getKeyPrefix() + ":" + memberUuid + ":" + LocalDate.now();
 
         if (getCount(todayKey) >= eventType.getMaxDailyCount()) {
-            return;
+            return false;
         }
 
         updateMemberPoint(memberUuid, eventType.getPoint());
         addTodayCount(todayKey);
+        return true;
     }
 
     // 금일 횟수 조회 메서드, 없는 경우 0 반환

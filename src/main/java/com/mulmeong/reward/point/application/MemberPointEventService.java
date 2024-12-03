@@ -7,5 +7,5 @@ public interface MemberPointEventService {
 
     void createMemberPointDocument(MemberCreateEvent memberCreateEvent);
 
-    void addPointByEvent(String memberUuid, EventType eventType);
+    boolean addPointByEvent(String memberUuid, EventType eventType);
 }
