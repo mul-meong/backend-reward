@@ -4,8 +4,12 @@ import com.mulmeong.event.comment.FeedCommentCreateEvent;
 import com.mulmeong.event.comment.FeedRecommentCreateEvent;
 import com.mulmeong.event.comment.ShortsCommentCreateEvent;
 import com.mulmeong.event.comment.ShortsRecommentCreateEvent;
+import com.mulmeong.event.contest.ContestPostCreateEvent;
+import com.mulmeong.event.feed.FeedCreateEvent;
 import com.mulmeong.event.member.MemberCreateEvent;
+import com.mulmeong.event.shorts.ShortsCreateEvent;
 import com.mulmeong.reward.common.exception.BaseException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +27,7 @@ import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.Map;
 
+@Slf4j
 @EnableKafka
 @Configuration
 public class KafkaConsumerConfig {
@@ -71,6 +76,23 @@ public class KafkaConsumerConfig {
         return kafkaListenerContainerFactory(ShortsRecommentCreateEvent.class);
     }
 
+    /* 피드 생성 후 이벤트 리스너 */
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, FeedCreateEvent> feedCreateEventListener() {
+        return kafkaListenerContainerFactory(FeedCreateEvent.class);
+    }
+
+    /* 쇼츠 생성 후 이벤트 리스너 */
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, ShortsCreateEvent> shortsCreateEventListener() {
+        return kafkaListenerContainerFactory(ShortsCreateEvent.class);
+    }
+
+    /* 콘테스트 포스트 생성 후 이벤트 리스너 */
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, ContestPostCreateEvent> contestPostCreateEventListener() {
+        return kafkaListenerContainerFactory(ContestPostCreateEvent.class);
+    }
     // =================================================================
     // 아래는 기본 설정입니다.
     // =================================================================
@@ -81,7 +103,6 @@ public class KafkaConsumerConfig {
      * @param messageType 제네릭으로 선언한 Event 객체
      * @return DefaultKafkaConsumerFactory, Kafka Listener가 사용하는 기본 Consumer Factory
      */
-    @Bean
     public <T> ConsumerFactory<String, T> consumerFactory(Class<T> messageType) {
         return new DefaultKafkaConsumerFactory<>(Map.of(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer,
@@ -90,8 +111,9 @@ public class KafkaConsumerConfig {
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class,
                 ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class.getName(),
                 ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName(),
-                JsonDeserializer.TRUSTED_PACKAGES, "com.mulmeong.event.*",
-                JsonDeserializer.VALUE_DEFAULT_TYPE, messageType
+                JsonDeserializer.VALUE_DEFAULT_TYPE, messageType.getName(),
+                JsonDeserializer.TRUSTED_PACKAGES, "com.mulmeong.*"
+
         ));
     }
 
@@ -102,7 +124,6 @@ public class KafkaConsumerConfig {
      * @param messageType 제네릭으로 선언한 Event 객체
      * @return ConcurrentKafkaListenerContainerFactory, 다중 스레드에서 Kafka 메시지를 처리하는 컨테이너 팩토리
      */
-    @Bean
     public <T> ConcurrentKafkaListenerContainerFactory<String, T> kafkaListenerContainerFactory(Class<T> messageType) {
         ConcurrentKafkaListenerContainerFactory<String, T> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
