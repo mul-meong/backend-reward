@@ -2,8 +2,8 @@ package com.mulmeong.reward.point.aop.aspect;
 
 
 import com.mulmeong.reward.point.domain.entity.EventType;
-import com.mulmeong.reward.point.domain.entity.MemberPointHistory;
-import com.mulmeong.reward.point.infrastructure.MemberPointHistoryRepository;
+import com.mulmeong.reward.point.domain.entity.PointHistory;
+import com.mulmeong.reward.point.infrastructure.PointHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -16,9 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class MemberPointHistoryAspect {
+public class PointHistoryAspect {
 
-    private final MemberPointHistoryRepository historyRepository;
+    private final PointHistoryRepository historyRepository;
 
     /**
      * LogPointHistory 어노테이션을 단 메서드가 true를 반환할 경우 포인트 히스토리 저장하는 어드바이스.
@@ -45,7 +45,7 @@ public class MemberPointHistoryAspect {
                 memberUuid, eventType.getReason(), eventType.getHistoryType(), eventType.getPoint());
 
         // 히스토리 저장
-        MemberPointHistory history = MemberPointHistory.builder()
+        PointHistory history = PointHistory.builder()
                 .memberUuid(memberUuid)
                 .reason(eventType.getReason())
                 .historyType(eventType.getHistoryType())

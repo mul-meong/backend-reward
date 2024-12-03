@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class MemberPointHistory {
+public class PointHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,8 +44,8 @@ public class MemberPointHistory {
     private LocalDateTime createdAt;
 
     @Builder
-    public MemberPointHistory(Long id, String memberUuid, HistoryReason reason,
-                              HistoryType historyType, Integer point, LocalDateTime createdAt) {
+    public PointHistory(Long id, String memberUuid, HistoryReason reason,
+                        HistoryType historyType, Integer point, LocalDateTime createdAt) {
         this.id = id;
         this.memberUuid = memberUuid;
         this.reason = reason;
