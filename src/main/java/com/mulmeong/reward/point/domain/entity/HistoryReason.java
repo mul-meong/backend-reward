@@ -11,7 +11,14 @@ public enum HistoryReason {
     SHORTS_CREATE,
     COMMENT_CREATE,
     CONTEST_WIN,
-    CONTEST_JOIN;
+    CONTEST_JOIN,
+
+    // Delete
+    FEED_DELETE,
+    SHORTS_DELETE,
+    COMMENT_DELETE,
+    REPORTED_APPROVE;
+
 
     public static HistoryReason safeConvertFrom(String reason) {
         try {
