@@ -30,6 +30,8 @@ public enum BaseResponseStatus {
 
     // 1800 : 포인트 관련 에러
     NO_POINT(HttpStatus.BAD_REQUEST, false, 1800, "존재하지 않는 포인트입니다."),
+    INVALID_HISTORY_TYPE(HttpStatus.BAD_REQUEST, false, 1801, "적절하지 않은 히스토리 타입입니다."),
+    INVALID_HISTORY_REASON(HttpStatus.BAD_REQUEST, false, 1802, "적절하지 않은 히스토리 이유입니다."),
 
 
     // 1900 : 등급 관련 에러
