@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
 
 import static com.mulmeong.reward.common.response.BaseResponseStatus.NO_POINT;
+import static com.mulmeong.reward.point.domain.entity.HistoryType.INCREASE;
 
 @Slf4j
 @Service
@@ -40,20 +41,33 @@ public class MemberPointEventServiceImpl implements MemberPointEventService {
         memberPointRepository.save(event.toEntity());
     }
 
+
+    /**
+     * 이벤트가 감소/증가냐에 따른 포인트 이벤트 분기.
+     * 성공 반환시 히스토리 저장(AOP).
+     *
+     * @param memberUuid 포인트 조정 대상인 회원 uuid
+     * @param eventType  redis key prefix, 포인트, 최대 횟수, 사유 등을 미리 정의한 enum
+     * @return 성공 여부 => T: 히스토리 저장, F: 히스토리 저장 X
+     */
+    @Override
+    @LogPointHistory
+    public boolean updatePointByEvent(String memberUuid, EventType eventType) {
+
+        return switch (eventType.getHistoryType()) {
+            case INCREASE -> handleIncreaseEvent(memberUuid, eventType);
+            case DECREASE -> handleDecreaseEvent(memberUuid, eventType.getPoint());
+        };
+    }
+
     /**
      * 포인트 증가 이벤트 처리
      * 1. Redis 에서 금일 횟수 조회
      * 2. 각 이벤트의 최대 횟수 초과 여부 확인 => 초과시 return;
      * 3. (미초과시) 횟수 증가 및 TTL 설정해 Redis 에 횟수 저장
-     * 4. 포인트 업데이트 및 히스토리 저장(AOP).
-     *
-     * @param memberUuid 포인트 조정 대상인 회원 uuid
-     * @param eventType redis key prefix, 포인트, 최대 횟수, 사유 등을 미리 정의한 enum
-     * @return 성공 여부 => T: 히스토리 저장, F: 히스토리 저장 X
+     * 4. 포인트 업데이트.
      */
-    @Override
-    @LogPointHistory
-    public boolean addPointByEvent(String memberUuid, EventType eventType) {
+    private boolean handleIncreaseEvent(String memberUuid, EventType eventType) {
         String todayKey = eventType.getKeyPrefix() + ":" + memberUuid + ":" + LocalDate.now();
 
         if (getCount(todayKey) >= eventType.getMaxDailyCount()) {
@@ -62,6 +76,15 @@ public class MemberPointEventServiceImpl implements MemberPointEventService {
 
         updateMemberPoint(memberUuid, eventType.getPoint());
         addTodayCount(todayKey);
+        return true;
+    }
+
+    /**
+     * 포인트 감소 이벤트 처리 : 증가와 달리 일일 한도가 없음.
+     * 포인트 업데이트만 처리.
+     */
+    public boolean handleDecreaseEvent(String memberUuid, int updatePoint) {
+        updateMemberPoint(memberUuid, updatePoint);
         return true;
     }
 
