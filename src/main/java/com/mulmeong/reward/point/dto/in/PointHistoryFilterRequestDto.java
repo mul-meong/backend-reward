@@ -1,7 +1,7 @@
 package com.mulmeong.reward.point.dto.in;
 
 import com.mulmeong.reward.point.domain.entity.HistoryReason;
-import com.mulmeong.reward.point.domain.entity.HistoryType;
+import com.mulmeong.reward.point.domain.entity.PointChangeType;
 import com.mulmeong.reward.point.domain.model.SortType;
 import com.mulmeong.reward.point.dto.model.BasePaginationDto;
 import lombok.Builder;
@@ -12,15 +12,15 @@ public class PointHistoryFilterRequestDto extends BasePaginationDto {
 
     private String memberUuid;
     private HistoryReason reason;
-    private HistoryType historyType;
+    private PointChangeType pointChangeType;
 
-    public static PointHistoryFilterRequestDto toDto(String memberUuid, String reason, String historyType,
+    public static PointHistoryFilterRequestDto toDto(String memberUuid, String reason, String pointChangeType,
                                                      String sortBy, Long lastId, Integer pageSize, Integer pageNo) {
 
         return PointHistoryFilterRequestDto.builder()
                 .memberUuid(memberUuid)
                 .reason(HistoryReason.safeConvertFrom(reason))
-                .historyType(HistoryType.safeConvertFrom(historyType))
+                .pointChangeType(PointChangeType.safeConvertFrom(pointChangeType))
                 .sortType(SortType.valueOf(sortBy.toUpperCase()))
                 .lastId(lastId)
                 .pageSize(pageSize)
@@ -29,12 +29,12 @@ public class PointHistoryFilterRequestDto extends BasePaginationDto {
     }
 
     @Builder
-    public PointHistoryFilterRequestDto(String memberUuid, HistoryReason reason, HistoryType historyType,
+    public PointHistoryFilterRequestDto(String memberUuid, HistoryReason reason, PointChangeType pointChangeType,
                                         SortType sortType, Long lastId, Integer pageSize, Integer pageNo) {
 
         super(sortType, lastId, pageSize, pageNo);
         this.memberUuid = memberUuid;
         this.reason = reason;
-        this.historyType = historyType;
+        this.pointChangeType = pointChangeType;
     }
 }

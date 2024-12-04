@@ -32,7 +32,7 @@ public class PointHistory {
     @Comment("포인트 변경 타입")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
-    private HistoryType historyType; // increase, decrease
+    private PointChangeType pointChangeType; // increase, decrease
 
     @Comment("변경된 포인트")
     @Column(nullable = false)
@@ -45,11 +45,11 @@ public class PointHistory {
 
     @Builder
     public PointHistory(Long id, String memberUuid, HistoryReason reason,
-                        HistoryType historyType, Integer point, LocalDateTime createdAt) {
+                        PointChangeType pointChangeType, Integer point, LocalDateTime createdAt) {
         this.id = id;
         this.memberUuid = memberUuid;
         this.reason = reason;
-        this.historyType = historyType;
+        this.pointChangeType = pointChangeType;
         this.point = point;
         this.createdAt = createdAt;
     }

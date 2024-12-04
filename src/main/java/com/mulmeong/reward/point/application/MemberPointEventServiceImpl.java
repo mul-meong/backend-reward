@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
 
 import static com.mulmeong.reward.common.response.BaseResponseStatus.NO_POINT;
-import static com.mulmeong.reward.point.domain.entity.HistoryType.INCREASE;
 
 @Slf4j
 @Service
@@ -54,7 +53,7 @@ public class MemberPointEventServiceImpl implements MemberPointEventService {
     @LogPointHistory
     public boolean updatePointByEvent(String memberUuid, EventType eventType) {
 
-        return switch (eventType.getHistoryType()) {
+        return switch (eventType.getPointChangeType()) {
             case INCREASE -> handleIncreaseEvent(memberUuid, eventType);
             case DECREASE -> handleDecreaseEvent(memberUuid, eventType.getPoint());
         };

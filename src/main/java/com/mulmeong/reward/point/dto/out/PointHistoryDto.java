@@ -1,7 +1,7 @@
 package com.mulmeong.reward.point.dto.out;
 
 import com.mulmeong.reward.point.domain.entity.HistoryReason;
-import com.mulmeong.reward.point.domain.entity.HistoryType;
+import com.mulmeong.reward.point.domain.entity.PointChangeType;
 import com.mulmeong.reward.point.domain.entity.PointHistory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,7 @@ public class PointHistoryDto {
     private Long id;
     private String memberUuid;
     private HistoryReason reason;
-    private HistoryType historyType;
+    private PointChangeType pointChangeType;
     private Integer point;
     private LocalDateTime createdAt;
 
@@ -26,7 +26,7 @@ public class PointHistoryDto {
                 .id(pointHistory.getId())
                 .memberUuid(pointHistory.getMemberUuid())
                 .reason(pointHistory.getReason())
-                .historyType(pointHistory.getHistoryType())
+                .pointChangeType(pointHistory.getPointChangeType())
                 .point(pointHistory.getPoint())
                 .createdAt(pointHistory.getCreatedAt())
                 .build();

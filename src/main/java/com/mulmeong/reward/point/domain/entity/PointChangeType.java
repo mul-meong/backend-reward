@@ -6,13 +6,13 @@ import lombok.Getter;
 import static com.mulmeong.reward.common.response.BaseResponseStatus.INVALID_HISTORY_TYPE;
 
 @Getter
-public enum HistoryType {
+public enum PointChangeType {
     INCREASE,
     DECREASE;
 
-    public static HistoryType safeConvertFrom(String historyType) {
+    public static PointChangeType safeConvertFrom(String pointChangeType) {
         try {
-            return historyType != null ? HistoryType.valueOf(historyType.toUpperCase()) : null;
+            return pointChangeType != null ? PointChangeType.valueOf(pointChangeType.toUpperCase()) : null;
         } catch (IllegalArgumentException e) {
             throw new BaseException(INVALID_HISTORY_TYPE);
         }

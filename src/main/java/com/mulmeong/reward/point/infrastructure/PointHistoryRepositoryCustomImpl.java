@@ -43,8 +43,8 @@ public class PointHistoryRepositoryCustomImpl implements PointHistoryRepositoryC
                 builder.and(pointHistory.reason.eq(reason)));
 
         // 이력 타입별 조회
-        Optional.ofNullable(requestDto.getHistoryType()).ifPresent(historyType ->
-                builder.and(pointHistory.historyType.eq(historyType)));
+        Optional.ofNullable(requestDto.getPointChangeType()).ifPresent(type ->
+                builder.and(pointHistory.pointChangeType.eq(type)));
 
         return getPointHistoriesWithPagination(requestDto, builder);
     }

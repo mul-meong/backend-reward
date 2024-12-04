@@ -41,14 +41,14 @@ public class PointHistoryAspect {
         String memberUuid = (String) args[0];
         EventType eventType = (EventType) args[1];
 
-        log.info("히스토리 기록: memberUuid={}, reason={}, historyType={}, point={}",
-                memberUuid, eventType.getReason(), eventType.getHistoryType(), eventType.getPoint());
+        log.info("히스토리 기록: memberUuid={}, reason={}, PointChangeType={}, point={}",
+                memberUuid, eventType.getReason(), eventType.getPointChangeType(), eventType.getPoint());
 
         // 히스토리 저장
         PointHistory history = PointHistory.builder()
                 .memberUuid(memberUuid)
                 .reason(eventType.getReason())
-                .historyType(eventType.getHistoryType())
+                .pointChangeType(eventType.getPointChangeType())
                 .point(eventType.getPoint())
                 .build();
 

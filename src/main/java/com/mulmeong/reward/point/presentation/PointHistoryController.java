@@ -26,14 +26,14 @@ public class PointHistoryController {
             reason: `FEED_CREATE` / `SHORTS_CREATE` / `COMMENT_CREATE`
             / `CONTEST_WIN` / `CONTEST_JOIN` / `FEED_DELETED` /
             `SHORTS_DELETED` / `COMMENT_DELETED` <br>
-            historyType: `INCREASE` / `DECREASE`<br>
+            pointChangeType: `INCREASE` / `DECREASE`<br>
             sortBy: `latest`(최신순) / `oldest`(오래된 순)<br>
             """)
     @GetMapping
     public BaseResponse<CursorPage<PointHistoryDto>> getMemberPointHistories(
             @PathVariable String memberUuid,
             @RequestParam(required = false) String reason,
-            @RequestParam(required = false) String historyType,
+            @RequestParam(required = false) String pointChangeType,
             @Parameter(description = "정렬 기준", schema = @Schema(allowableValues = {"latest", "oldest"}))
             @RequestParam(defaultValue = "latest", value = "sortBy", required = false) String sortBy,
             @RequestParam(required = false) Long lastId,
@@ -41,7 +41,8 @@ public class PointHistoryController {
             @RequestParam(required = false) Integer pageNo
     ) {
         CursorPage<PointHistoryDto> cursorPage = pointHistoryService.getMemberPointHistories(
-                PointHistoryFilterRequestDto.toDto(memberUuid, reason, historyType, sortBy, lastId, pageSize, pageNo));
+                PointHistoryFilterRequestDto.toDto(memberUuid, reason, pointChangeType,
+                        sortBy, lastId, pageSize, pageNo));
 
         return new BaseResponse<>(cursorPage);
     }
