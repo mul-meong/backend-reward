@@ -1,5 +1,6 @@
 package com.mulmeong.reward.badge.application;
 
+import com.mulmeong.event.member.MemberBadgeCreateEvent;
 import com.mulmeong.event.member.MemberBadgeUpdateEvent;
 import com.mulmeong.reward.badge.domain.MemberBadge;
 import com.mulmeong.reward.badge.dto.in.MemberBadgeCreateDto;
@@ -20,11 +21,12 @@ import static com.mulmeong.reward.common.response.BaseResponseStatus.NO_BADGE;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class MemberBadgeServiceImpl implements MemberBadgeService {
+public class MemberBadgeHttpServiceImpl implements MemberBadgeHttpService {
 
     private final MemberBadgeRepository memberBadgeRepository;
 
     private final BadgeEventPublisher eventPublisher;
+    private final MemberBadgeEventServiceImpl memberBadgeEventServiceImpl;
 
     /**
      * 회원_뱃지 수정 API(회원이 뱃지 장착/해제)
@@ -83,16 +85,18 @@ public class MemberBadgeServiceImpl implements MemberBadgeService {
 
 
     /**
-     * 회원_뱃지 추가 API 겸 이벤트 소비자.
-     * 1. 특정 Badge관련 Event가 발행되면, 여기서 consume하여 뱃지를 부여.
+     * 회원_뱃지 추가 API
+     * 1. {@link MemberBadgeEventServiceImpl}에서 이벤트 컨슘을 통해 뱃지를 부여하기도 하나 API도 마련해두었습니다.
      * 2. API를 통해 뱃지를 부여할 회원의 uuid와 뱃지의 id를 받아서 뱃지를 부여.
+     * 3. 뱃지 부여시 알림을 위해 이벤트를 발행.
      *
-     * @param requestDto 회원uuid, 뱃지id, 장착 여부(false)
+     * @param requestDto 회원uuid, 뱃지id, 장착 여부(기본값 false)
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createMemberBadge(MemberBadgeCreateDto requestDto) {
-        memberBadgeRepository.save(requestDto.toEntity());
+        MemberBadge memberBadge = memberBadgeRepository.save(requestDto.toEntity());
+        eventPublisher.send(MemberBadgeCreateEvent.from(memberBadge, false));
     }
 
     //// private 메서드

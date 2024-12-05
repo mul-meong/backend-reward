@@ -6,7 +6,7 @@ import com.mulmeong.reward.badge.dto.out.MemberBadgeDto;
 
 import java.util.List;
 
-public interface MemberBadgeService {
+public interface MemberBadgeHttpService {
 
     void createMemberBadge(MemberBadgeCreateDto memberBadgeCreateDto);
 

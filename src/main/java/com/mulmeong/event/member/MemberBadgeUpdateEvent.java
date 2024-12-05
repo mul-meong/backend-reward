@@ -12,19 +12,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MemberBadgeUpdateEvent {
     private String memberUuid;
-    private Long id;
-    private String name;
-    private String imageUrl;
-    private String description;
+    private Long badgeId;
+    private String badgeName;
+    private String badgeImageUrl;
+    private String badgeDescription;
     private boolean equipped;
 
     public static MemberBadgeUpdateEvent from(MemberBadge memberBadge, boolean equipped) {
         return MemberBadgeUpdateEvent.builder()
                 .memberUuid(memberBadge.getMemberUuid())
-                .id(memberBadge.getBadge().getId())
-                .name(memberBadge.getBadge().getName())
-                .imageUrl(memberBadge.getBadge().getImageUrl())
-                .description(memberBadge.getBadge().getDescription())
+                .badgeId(memberBadge.getBadge().getId())
+                .badgeName(memberBadge.getBadge().getName())
+                .badgeImageUrl(memberBadge.getBadge().getImageUrl())
+                .badgeDescription(memberBadge.getBadge().getDescription())
                 .equipped(equipped)
                 .build();
     }
