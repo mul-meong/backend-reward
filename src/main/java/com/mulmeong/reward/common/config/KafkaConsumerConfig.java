@@ -2,6 +2,7 @@ package com.mulmeong.reward.common.config;
 
 import com.mulmeong.event.comment.*;
 import com.mulmeong.event.contest.ContestPostCreateEvent;
+import com.mulmeong.event.contest.ContestVoteResultEvent;
 import com.mulmeong.event.feed.FeedCreateEvent;
 import com.mulmeong.event.feed.FeedDeleteEvent;
 import com.mulmeong.event.member.MemberCreateEvent;
@@ -131,6 +132,12 @@ public class KafkaConsumerConfig {
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, ContestPostCreateEvent> contestPostCreateEventListener() {
         return kafkaListenerContainerFactory(ContestPostCreateEvent.class);
+    }
+
+    /* 콘테스트 우승 이벤트 리스너 */
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, ContestVoteResultEvent> contestVoteResultEventListener() {
+        return kafkaListenerContainerFactory(ContestVoteResultEvent.class);
     }
 
     // =================== 신고 ===================

@@ -2,6 +2,7 @@ package com.mulmeong.reward.point.infrastructure;
 
 import com.mulmeong.event.comment.*;
 import com.mulmeong.event.contest.ContestPostCreateEvent;
+import com.mulmeong.event.contest.ContestVoteResultEvent;
 import com.mulmeong.event.feed.FeedCreateEvent;
 import com.mulmeong.event.feed.FeedDeleteEvent;
 import com.mulmeong.event.member.MemberCreateEvent;
@@ -10,7 +11,6 @@ import com.mulmeong.event.shorts.ShortsCreateEvent;
 import com.mulmeong.reward.point.application.MemberPointEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -123,6 +123,13 @@ public class PointKafkaConsumer {
     public void handleContestPostCreatedEvent(ContestPostCreateEvent event) {
         memberPointEventService.updatePointByEvent(event.getMemberUuid(), CONTEST_JOINED);
         log.info("Consumed 콘테스트 포스트 생성 이벤트 : {}", event);
+    }
+
+    @KafkaListener(topics = "${event.contest.pub.topics.contest-result.name}",
+            containerFactory = "memberCreateEventListener")
+    public void handleContestWinEvent(ContestVoteResultEvent event) {
+        memberPointEventService.updatePointByEvent(event.getMemberUuid(), CONTEST_WON);
+        log.info("Consumed 콘테스트 우승 이벤트 : {}", event);
     }
 
     // =================== 신고 ===================
