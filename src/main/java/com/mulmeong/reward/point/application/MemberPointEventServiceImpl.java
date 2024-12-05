@@ -1,7 +1,11 @@
 package com.mulmeong.reward.point.application;
 
 import com.mulmeong.event.member.MemberCreateEvent;
+import com.mulmeong.event.member.MemberGradeUpdateEvent;
 import com.mulmeong.reward.common.exception.BaseException;
+import com.mulmeong.reward.grade.aop.annotation.GradeUpdate;
+import com.mulmeong.reward.grade.domain.model.GradeThreshold;
+import com.mulmeong.reward.grade.infrastructure.GradeEventPublisher;
 import com.mulmeong.reward.point.aop.annotation.LogPointHistory;
 import com.mulmeong.reward.point.domain.document.MemberPoint;
 import com.mulmeong.reward.point.domain.entity.EventType;
@@ -26,6 +30,7 @@ import static com.mulmeong.reward.common.response.BaseResponseStatus.NO_POINT;
 public class MemberPointEventServiceImpl implements MemberPointEventService {
 
     private final MemberPointRepository memberPointRepository;
+    private final GradeEventPublisher gradeEventPublisher;
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final MongoTemplate mongoTemplate;
@@ -72,7 +77,6 @@ public class MemberPointEventServiceImpl implements MemberPointEventService {
         if (getCount(todayKey) >= eventType.getMaxDailyCount()) {
             return false;
         }
-
         updateMemberPoint(memberUuid, eventType.getPoint());
         addTodayCount(todayKey);
         return true;
@@ -82,7 +86,7 @@ public class MemberPointEventServiceImpl implements MemberPointEventService {
      * 포인트 감소 이벤트 처리 : 증가와 달리 일일 한도가 없음.
      * 포인트 업데이트만 처리.
      */
-    public boolean handleDecreaseEvent(String memberUuid, int updatePoint) {
+    private boolean handleDecreaseEvent(String memberUuid, int updatePoint) {
         updateMemberPoint(memberUuid, updatePoint);
         return true;
     }
@@ -100,17 +104,30 @@ public class MemberPointEventServiceImpl implements MemberPointEventService {
     }
 
     // 포인트 업데이트, 없는 경우 예외 처리
+    // 만약 포인트 수정 후 등급이 변경되었다면 이벤트 발행 => ReadDB 반영, 알림 전송
+    // todo : Batch-Service 에서 일괄 처리
+    //@GradeUpdate
     private void updateMemberPoint(String memberUuid, int point) {
         // 포인트 조회와 동시에 수정
         Update update = new Update().inc("point", point);
         MemberPoint memberPoint = mongoTemplate.findAndModify(
                 Query.query(Criteria.where("_id").is(memberUuid)),
                 update,
-                MemberPoint.class
-        );
+                MemberPoint.class);
 
         if (memberPoint == null) {
             throw new BaseException(NO_POINT);
+        }
+
+        pubEventIfGradeChange(memberUuid, memberPoint.getPoint(), memberPoint.getPoint() + point);
+    }
+
+    private void pubEventIfGradeChange(String memberUuid, int currentPoint, int updatedPoint) {
+
+        Long updatedGradeId = GradeThreshold.getGradeIdByPoint(updatedPoint);
+
+        if (!GradeThreshold.getGradeIdByPoint(currentPoint).equals(updatedGradeId)) {
+            gradeEventPublisher.send(MemberGradeUpdateEvent.of(memberUuid, updatedGradeId));
         }
     }
 }

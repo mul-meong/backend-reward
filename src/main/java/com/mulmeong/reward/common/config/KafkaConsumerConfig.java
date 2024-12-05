@@ -186,6 +186,13 @@ public class KafkaConsumerConfig {
         return factory;
     }
 
+    /**
+     * Kafka Listener에서 예외가 발생했을 때 처리하는 DefaultErrorHandler를 생성.
+     * 재시도 횟수와 대기 시간을 설정합니다.
+     * BaseException은 재시도하지 않습니다.
+     *
+     * @return DefaultErrorHandler DefaultErrorHandler 객체
+     */
     @Bean
     public DefaultErrorHandler errorHandler() {
         DefaultErrorHandler errorHandler = new DefaultErrorHandler(
