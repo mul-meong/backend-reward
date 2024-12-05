@@ -1,4 +1,4 @@
-package com.mulmeong.reward.grade.domain;
+package com.mulmeong.reward.grade.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -24,8 +24,12 @@ public class Grade {
     @Column(nullable = false)
     private Integer pointThreshold;
 
+    @Comment("등급 이미지 URL")
+    @Column(nullable = false, length = 2083)
+    private String imageUrl;
+
     @Builder
-    public Grade(Long id, String name, Integer pointThreshold) {
+    public Grade(Long id, String name, Integer pointThreshold, String imageUrl) {
         this.id = id;
         this.name = name;
         this.pointThreshold = pointThreshold;

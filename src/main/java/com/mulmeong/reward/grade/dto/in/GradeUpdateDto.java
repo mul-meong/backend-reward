@@ -1,6 +1,6 @@
 package com.mulmeong.reward.grade.dto.in;
 
-import com.mulmeong.reward.grade.domain.Grade;
+import com.mulmeong.reward.grade.domain.entity.Grade;
 import com.mulmeong.reward.grade.vo.in.GradeUpdateVo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
