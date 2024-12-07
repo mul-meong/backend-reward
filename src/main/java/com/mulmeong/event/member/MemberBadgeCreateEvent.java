@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class MemberBadgeUpdateEvent {
+public class MemberBadgeCreateEvent {
+
     private String memberUuid;
     private Long badgeId;
     private String badgeName;
@@ -18,8 +19,8 @@ public class MemberBadgeUpdateEvent {
     private String badgeDescription;
     private boolean equipped;
 
-    public static MemberBadgeUpdateEvent from(MemberBadge memberBadge, boolean equipped) {
-        return MemberBadgeUpdateEvent.builder()
+    public static MemberBadgeCreateEvent from(MemberBadge memberBadge, boolean equipped) {
+        return MemberBadgeCreateEvent.builder()
                 .memberUuid(memberBadge.getMemberUuid())
                 .badgeId(memberBadge.getBadge().getId())
                 .badgeName(memberBadge.getBadge().getName())

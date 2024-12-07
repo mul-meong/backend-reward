@@ -1,6 +1,7 @@
 package com.mulmeong.reward.badge.infrastructure;
 
 import com.mulmeong.event.member.MemberBadgeUpdateEvent;
+import com.mulmeong.event.member.MemberBadgeCreateEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,8 @@ public class BadgeEventPublisher {
     @Value("${event.badge.pub.topics.member-badge-update.name}")
     private String memberBadgeUpdateEventTopic;
 
+    @Value("${event.badge.pub.topics.member-badge-create.name}")
+    private String memberBadgeCreateEventTopic;
 
     public void send(String topic, Object event) {
         log.info("이벤트 발행, topic: {}", topic);
@@ -35,5 +38,8 @@ public class BadgeEventPublisher {
         kafkaTemplate.send(memberBadgeUpdateEventTopic, event);
     }
 
+    public void send(MemberBadgeCreateEvent event) {
+        kafkaTemplate.send(memberBadgeCreateEventTopic, event);
+    }
 
 }

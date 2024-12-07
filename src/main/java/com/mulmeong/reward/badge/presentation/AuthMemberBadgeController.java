@@ -1,6 +1,6 @@
 package com.mulmeong.reward.badge.presentation;
 
-import com.mulmeong.reward.badge.application.MemberBadgeService;
+import com.mulmeong.reward.badge.application.MemberBadgeHttpService;
 import com.mulmeong.reward.badge.dto.in.MemberBadgeCreateDto;
 import com.mulmeong.reward.badge.dto.in.MemberBadgeUpdateDto;
 import com.mulmeong.reward.badge.dto.out.MemberBadgeDto;
@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 public class AuthMemberBadgeController {
 
-    private final MemberBadgeService memberBadgeService;
+    private final MemberBadgeHttpService memberBadgeHttpService;
 
     @Operation(summary = "회원_뱃지 생성", description = """
             회원이 뱃지를 획득하는 API입니다. 뱃지는 한 회원당 하나씩 가질 수 있으며,
@@ -29,7 +29,7 @@ public class AuthMemberBadgeController {
     @PostMapping()
     public BaseResponse<Void> createMemberBadge(@PathVariable String memberUuid,
                                                 @RequestBody MemberBadgeCreateVo requestVo) {
-        memberBadgeService.createMemberBadge(MemberBadgeCreateDto.toDto(requestVo, memberUuid));
+        memberBadgeHttpService.createMemberBadge(MemberBadgeCreateDto.toDto(requestVo, memberUuid));
         return new BaseResponse<>();
     }
 
@@ -42,7 +42,7 @@ public class AuthMemberBadgeController {
     public BaseResponse<Void> updateBadgeEquipStatus(@PathVariable String memberUuid,
                                                      @PathVariable Long badgeId,
                                                      @RequestBody MemberBadgeUpdateVo requestVo) {
-        memberBadgeService.updateBadgeEquipStatus(
+        memberBadgeHttpService.updateBadgeEquipStatus(
                 MemberBadgeUpdateDto.toDto(requestVo, memberUuid, badgeId));
         return new BaseResponse<>();
     }
@@ -50,13 +50,13 @@ public class AuthMemberBadgeController {
     @Operation(summary = "특정 회원이 가진 특정 뱃지 조회", description = "특정 회원이 가진 특정 뱃지의 ID, 장착 여부를 조회합니다.")
     @GetMapping("/{badgeId}")
     public BaseResponse<MemberBadgeDto> getBadge(@PathVariable String memberUuid, @PathVariable Long badgeId) {
-        return new BaseResponse<>(memberBadgeService.getMemberBadge(memberUuid, badgeId));
+        return new BaseResponse<>(memberBadgeHttpService.getMemberBadge(memberUuid, badgeId));
     }
 
     @Operation(summary = "특정 회원이 가진 모든 뱃지 조회", description = "특정 회원이 가진 모든 뱃지의 ID와 장착 여부를 조회합니다.")
     @GetMapping()
     public BaseResponse<List<MemberBadgeDto>> getAllBadges(@PathVariable String memberUuid) {
-        return new BaseResponse<>(memberBadgeService.getMemberBadges(memberUuid));
+        return new BaseResponse<>(memberBadgeHttpService.getMemberBadges(memberUuid));
     }
 
 
