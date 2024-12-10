@@ -11,6 +11,10 @@ checkstyle {
     toolVersion = "10.18.0"
 }
 
+tasks.withType(Checkstyle) {
+    source = source.filter { !it.path.contains("common/config") }
+}
+
 group = 'com.mulmeong'
 version = '0.0.1-SNAPSHOT'
 
@@ -47,8 +51,17 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    // QueryDSL
+    implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.1.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
+
+    // validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
