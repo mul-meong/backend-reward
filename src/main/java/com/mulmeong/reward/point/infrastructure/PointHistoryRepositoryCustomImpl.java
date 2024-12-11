@@ -53,25 +53,30 @@ public class PointHistoryRepositoryCustomImpl implements PointHistoryRepositoryC
             BasePaginationDto requestDto,
             BooleanBuilder builder) {
 
-        // lastId가 존재하는 경우 해당 ID 이후부터 조회
+        // 마지막 ID를 기준으로 이전/이후 페이지 조회
         Optional.ofNullable(requestDto.getLastId()).ifPresent(lastId ->
-                builder.and(pointHistory.id.lt(lastId)));
+                builder.and(requestDto.getSortType() == SortType.LATEST
+                        ? pointHistory.id.lt(lastId) : pointHistory.id.gt(lastId)));
 
+        // 페이지 번호와 사이즈에 따른 조회
         int currentPageNo = Optional.ofNullable(requestDto.getPageNo()).orElse(DEFAULT_PAGE_NUMBER);
         int currentPageSize = Optional.ofNullable(requestDto.getPageSize()).orElse(DEFAULT_PAGE_SIZE);
         int offset = Math.max(0, (currentPageNo - 1) * currentPageSize);
 
+        // 쿼리 실행
         List<PointHistory> content = jpaQueryFactory
                 .selectFrom(pointHistory)
                 .where(builder)
                 .orderBy(determineSortOrder(pointHistory, requestDto.getSortType()))
                 .offset(offset)
-                .limit(currentPageSize + 1)
+                .limit(currentPageSize + 1) // 다음 페이지 존재 여부 판단을 위해 1개 더 조회
                 .fetch();
 
+        // 다음 페이지 커서 및 hasNext 여부 판단
         Long nextCursor = null;
         boolean hasNext = false; // 다음 페이지의 커서 처리 및 hasNext 여부 판단
 
+        // 다음 페이지가 존재하는 경우 => hasNext = true, 다음 페이지 커서 설정
         if (content.size() > currentPageSize) {
             hasNext = true;
             nextCursor = content.get(currentPageSize - 1).getId(); // 마지막 항목의 ID를 커서로 설정
