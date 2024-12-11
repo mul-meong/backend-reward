@@ -17,7 +17,7 @@ public class Grade {
     private Long id;
 
     @Comment("등급 이름")
-    @Column(nullable = false, unique = true, length = 5)
+    @Column(nullable = false, unique = true, length = 10)
     private String name;
 
     @Comment("등급에 해당하는 포인트 임계값")
@@ -33,5 +33,6 @@ public class Grade {
         this.id = id;
         this.name = name;
         this.pointThreshold = pointThreshold;
+        this.imageUrl = imageUrl;
     }
 }

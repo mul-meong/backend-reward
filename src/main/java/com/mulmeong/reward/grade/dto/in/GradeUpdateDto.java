@@ -14,12 +14,14 @@ public class GradeUpdateDto {
     private Long id;
     private String name;
     private Integer pointThreshold;
+    private String imageUrl;
 
     public static GradeUpdateDto toDto(GradeUpdateVo vo, Long gradeId) {
         return GradeUpdateDto.builder()
                 .id(gradeId)
                 .name(vo.getName())
                 .pointThreshold(vo.getPointThreshold())
+                .imageUrl(vo.getImageUrl())
                 .build();
     }
 
@@ -28,6 +30,7 @@ public class GradeUpdateDto {
                 .id(grade.getId())
                 .name(name)
                 .pointThreshold(pointThreshold)
+                .imageUrl(imageUrl)
                 .build();
     }
 }
