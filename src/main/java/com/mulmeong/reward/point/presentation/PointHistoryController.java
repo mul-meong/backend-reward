@@ -36,13 +36,13 @@ public class PointHistoryController {
             @RequestParam(required = false) String pointChangeType,
             @Parameter(description = "정렬 기준", schema = @Schema(allowableValues = {"latest", "oldest"}))
             @RequestParam(defaultValue = "latest", value = "sortBy", required = false) String sortBy,
-            @RequestParam(required = false) Long lastId,
+            @RequestParam(required = false) Long nextCursor,
             @RequestParam(required = false) Integer pageSize,
             @RequestParam(required = false) Integer pageNo
     ) {
         CursorPage<PointHistoryDto> cursorPage = pointHistoryService.getMemberPointHistories(
                 PointHistoryFilterRequestDto.toDto(memberUuid, reason, pointChangeType,
-                        sortBy, lastId, pageSize, pageNo));
+                        sortBy, nextCursor, pageSize, pageNo));
 
         return new BaseResponse<>(cursorPage);
     }

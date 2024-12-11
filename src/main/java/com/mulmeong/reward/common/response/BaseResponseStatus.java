@@ -38,7 +38,7 @@ public enum BaseResponseStatus {
     NO_GRADE(HttpStatus.BAD_REQUEST, false, 1900, "존재하지 않는 등급입니다."),
     EXIST_GRADE(HttpStatus.BAD_REQUEST, false, 1901, "이미 존재하는 등급입니다.");
 
-    private final HttpStatusCode httpStatusCode;
+    private final HttpStatus httpStatusCode;
     private final boolean isSuccess;
     private final int code;
     private final String message;
