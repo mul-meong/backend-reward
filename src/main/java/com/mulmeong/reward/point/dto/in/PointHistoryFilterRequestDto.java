@@ -15,14 +15,14 @@ public class PointHistoryFilterRequestDto extends BasePaginationDto {
     private PointChangeType pointChangeType;
 
     public static PointHistoryFilterRequestDto toDto(String memberUuid, String reason, String pointChangeType,
-                                                     String sortBy, Long lastId, Integer pageSize, Integer pageNo) {
+                                                     String sortBy, Long nextCursor, Integer pageSize, Integer pageNo) {
 
         return PointHistoryFilterRequestDto.builder()
                 .memberUuid(memberUuid)
                 .reason(HistoryReason.safeConvertFrom(reason))
                 .pointChangeType(PointChangeType.safeConvertFrom(pointChangeType))
                 .sortType(SortType.valueOf(sortBy.toUpperCase()))
-                .lastId(lastId)
+                .lastId(nextCursor)
                 .pageSize(pageSize)
                 .pageNo(pageNo)
                 .build();
